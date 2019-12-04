@@ -5,6 +5,7 @@ import (
 	"mock/internal/handlers"
 	"mock/pkg/jsonconfig"
 	"net/http"
+	"syscall"
 
 	"github.com/go-chi/chi"
 )
@@ -26,5 +27,10 @@ func Init(cm map[string][]*jsonconfig.Mock) {
 	r.Head("/*", h.Index)
 	r.Delete("/*", h.Index)
 
-	log.Fatal(http.ListenAndServe(":8080", r))
+	port, found := syscall.Getenv("CURRENT_PORT")
+	if !found {
+		port = "8111"
+	}
+
+	log.Fatal(http.ListenAndServe(":" + port, r))
 }

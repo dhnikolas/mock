@@ -1,0 +1,6 @@
+.idea/
+.vscode/
+vendor/
+logs/
+Dockerfile
+rest-client.env.json

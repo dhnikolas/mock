@@ -35,7 +35,19 @@ func (h *Handler) DeleteMock(w http.ResponseWriter, r *http.Request) {
 	}
 
 	url := strings.Trim(rb.Url, "/")
-	delete(h.ConfigMap, url)
+
+	mocks, ok := h.ConfigMap[url]
+	if ok {
+		if len(mocks) > 1 {
+			for i, mock := range mocks {
+				if mock.Method == rb.Method {
+					h.ConfigMap[url] = append(h.ConfigMap[url][:i], h.ConfigMap[url][i+1:]...)
+				}
+			}
+		} else {
+			delete(h.ConfigMap, url)
+		}
+	}
 
 	isDeleted, err := jsonconfig.RemoveFromConfig(url, rb.Method)
 	if !isDeleted{

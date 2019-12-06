@@ -60,10 +60,17 @@ func (h *Handler) AddMock(w http.ResponseWriter, r *http.Request) {
 	}
 
 	url := strings.Trim(rb.Url, "/")
+	rb.Url = url
 
 	_, ok := h.ConfigMap[url]
 
 	if ok {
+		for _, cm := range h.ConfigMap[url] {
+			if cm.Method == rb.Method {
+				response.JSONError(w, http.StatusBadRequest, "Mock already exist")
+				return
+			}
+		}
 		h.ConfigMap[url] = append(h.ConfigMap[url], rb)
 	} else {
 		h.ConfigMap[url] = []*jsonconfig.Mock{rb}

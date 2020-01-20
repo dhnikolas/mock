@@ -50,12 +50,10 @@ func AddToConfig(m *Mock) error {
 
 func RemoveFromConfig (url, method string) (bool, error) {
 	isDeleted := false
-
 	mocks, err := readJsonConfig()
 	if err != nil {
 		return false, err
 	}
-
 	for i, m := range mocks {
 		if m.Method == method && strings.Trim(m.Url, "/") == strings.Trim(url, "/") {
 			mocks = append(mocks[:i], mocks[i+1:]...)
@@ -69,6 +67,19 @@ func RemoveFromConfig (url, method string) (bool, error) {
 	}
 
 	return isDeleted, nil
+}
+
+func GetConfigFileBody() ([]byte, error) {
+	configFile, err := getConfigFile()
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		configFile.Close()
+	}()
+	byteValue, err := ioutil.ReadAll(configFile)
+
+	return byteValue, err
 }
 
 func writeConfig (mocks Mocks) error {
@@ -100,15 +111,10 @@ func writeConfig (mocks Mocks) error {
 }
 
 func readJsonConfig() (Mocks, error) {
-	configFile, err := getConfigFile()
+	byteValue, err := GetConfigFileBody()
 	if err != nil {
 		return nil, err
 	}
-	defer func() {
-		configFile.Close()
-	}()
-
-	byteValue, _ := ioutil.ReadAll(configFile)
 
 	mocks := &Mocks{}
 	if len(byteValue) > 0 {

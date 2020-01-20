@@ -3,3 +3,4 @@
 vendor/
 logs/
 rest-client.env.json
+cmd/app/mock.json

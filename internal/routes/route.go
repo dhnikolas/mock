@@ -15,6 +15,7 @@ func Init(cm map[string][]*jsonconfig.Mock) {
 
 	h := &handlers.Handler{ConfigMap: cm}
 
+	r.Get("/v1/mock/", h.ListMock)
 	r.Post("/v1/mock/", h.AddMock)
 	r.Delete("/v1/mock/", h.DeleteMock)
 

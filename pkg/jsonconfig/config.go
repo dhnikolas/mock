@@ -10,6 +10,7 @@ import (
 const FileName = "mock.json"
 
 type Mock struct {
+	Id          string          `json:"id"`
 	Url         string          `json:"url"`
 	Method      string          `json:"method"`
 	Params      []*RequestParam `json:"params"`
@@ -30,7 +31,7 @@ func GetConfigMap() (map[string][]*Mock, error) {
 	if err != nil {
 		return nil, err
 	}
-	cm := configMap(c)
+	cm := ConfigMap(c)
 
 	return cm, nil
 }
@@ -48,14 +49,14 @@ func AddToConfig(m *Mock) error {
 	return err
 }
 
-func RemoveFromConfig (url, method string) (bool, error) {
+func RemoveFromConfig(id string) (Mocks, bool, error) {
 	isDeleted := false
 	mocks, err := readJsonConfig()
 	if err != nil {
-		return false, err
+		return nil, false, err
 	}
 	for i, m := range mocks {
-		if m.Method == method && strings.Trim(m.Url, "/") == strings.Trim(url, "/") {
+		if m.Id == id  {
 			mocks = append(mocks[:i], mocks[i+1:]...)
 			isDeleted = true
 		}
@@ -63,10 +64,31 @@ func RemoveFromConfig (url, method string) (bool, error) {
 
 	err = writeConfig(mocks)
 	if err != nil {
-		return false, err
+		return nil, false, err
 	}
 
-	return isDeleted, nil
+	return mocks, isDeleted, nil
+}
+
+func UpdateConfig(mock *Mock) (Mocks, bool, error) {
+	isUpdated := false
+	mocks, err := readJsonConfig()
+	if err != nil {
+		return nil, false, err
+	}
+	for i, m := range mocks {
+		if m.Id == mock.Id  {
+			mocks[i] = mock
+			isUpdated = true
+		}
+	}
+
+	err = writeConfig(mocks)
+	if err != nil {
+		return nil, false, err
+	}
+
+	return mocks, isUpdated, nil
 }
 
 func GetConfigFileBody() ([]byte, error) {
@@ -82,7 +104,7 @@ func GetConfigFileBody() ([]byte, error) {
 	return byteValue, err
 }
 
-func writeConfig (mocks Mocks) error {
+func writeConfig(mocks Mocks) error {
 
 	configFile, err := getConfigFile()
 	if err != nil {
@@ -144,7 +166,7 @@ func getConfigFile() (*os.File, error) {
 	return configFile, nil
 }
 
-func configMap(mocks Mocks) map[string][]*Mock {
+func ConfigMap(mocks Mocks) map[string][]*Mock {
 	configMap := map[string][]*Mock{}
 	for _, m := range mocks {
 		url := strings.Trim(m.Url, "/")

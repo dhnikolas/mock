@@ -1,6 +1,11 @@
 package utils
 
-import "context"
+import (
+	"context"
+	"crypto/rand"
+	"encoding/base64"
+	"fmt"
+)
 
 func Contains(a []string, x string) bool {
 	for _, n := range a {
@@ -44,3 +49,15 @@ func GetRequestId (ctx context.Context) string {
 	return requestID
 }
 
+
+func RandomString(size int) string {
+	rb := make([]byte, size)
+	_, err := rand.Read(rb)
+	if err != nil {
+		fmt.Println(err)
+	}
+	rs := base64.URLEncoding.EncodeToString(rb)
+	rs = rs[0 : len(rs)-1]
+
+	return rs
+}

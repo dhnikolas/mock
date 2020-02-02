@@ -17,6 +17,7 @@ func Init(cm map[string][]*jsonconfig.Mock) {
 
 	r.Get("/v1/mock/", h.ListMock)
 	r.Post("/v1/mock/", h.AddMock)
+	r.Patch("/v1/mock/", h.UpdateMock)
 	r.Delete("/v1/mock/", h.DeleteMock)
 
 	r.Get("/*", h.Index)

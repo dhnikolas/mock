@@ -6,7 +6,6 @@ import (
 	"mock/pkg/jsonconfig"
 	"mock/pkg/response"
 	"net/http"
-	"strings"
 )
 
 func (h *Handler) DeleteMock(w http.ResponseWriter, r *http.Request) {
@@ -24,36 +23,18 @@ func (h *Handler) DeleteMock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if rb.Url == "" {
-		response.JSONError(w, http.StatusBadRequest, "url is empty ")
+	if rb.Id == "" {
+		response.JSONError(w, http.StatusBadRequest, "Id is empty ")
 		return
 	}
 
-	if rb.Method == "" {
-		response.JSONError(w, http.StatusBadRequest, "method is empty ")
-		return
-	}
-
-	url := strings.Trim(rb.Url, "/")
-
-	mocks, ok := h.ConfigMap[url]
-	if ok {
-		if len(mocks) > 1 {
-			for i, mock := range mocks {
-				if mock.Method == rb.Method {
-					h.ConfigMap[url] = append(h.ConfigMap[url][:i], h.ConfigMap[url][i+1:]...)
-				}
-			}
-		} else {
-			delete(h.ConfigMap, url)
-		}
-	}
-
-	isDeleted, err := jsonconfig.RemoveFromConfig(url, rb.Method)
+	newMocks, isDeleted, err := jsonconfig.RemoveFromConfig(rb.Id)
 	if !isDeleted{
 		response.JSONError(w, http.StatusBadRequest, "nothing to delete")
 		return
 	}
+
+	h.ConfigMap = jsonconfig.ConfigMap(newMocks)
 
 	response.JSON(w, http.StatusOK, "Mock successfully deleted")
 	return

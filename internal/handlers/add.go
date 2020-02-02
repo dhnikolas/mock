@@ -61,7 +61,7 @@ func (h *Handler) AddMock(w http.ResponseWriter, r *http.Request) {
 
 	url := strings.Trim(rb.Url, "/")
 	rb.Url = url
-
+	rb.Id = utils.RandomString(10)
 	_, ok := h.ConfigMap[url]
 
 	if ok {
@@ -81,7 +81,12 @@ func (h *Handler) AddMock(w http.ResponseWriter, r *http.Request) {
 		response.JSONError(w, http.StatusBadRequest, err.Error())
 		return
 	}
+	jsonBody, err := json.Marshal(rb)
+	if err != nil {
+		response.JSONError(w, http.StatusBadRequest, err.Error())
+		return
+	}
 
-	response.JSON(w, http.StatusOK, "New mock successfully added")
+	response.WriteBody(w, http.StatusOK, jsonBody)
 	return
 }

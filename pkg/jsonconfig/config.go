@@ -11,11 +11,11 @@ const FileName = "mock.json"
 
 type Mock struct {
 	Id          string          `json:"id"`
-	Url         string          `json:"url"`
+	Url         string          `json:"mainUrl"`
 	Method      string          `json:"method"`
 	Params      []*RequestParam `json:"params"`
-	Status      int             `json:"status"`
-	ContentType string          `json:"content_type"`
+	Status      string             `json:"status"`
+	ContentType string          `json:"contentType"`
 	Body        string          `json:"body"`
 }
 

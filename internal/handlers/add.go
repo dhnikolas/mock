@@ -30,11 +30,6 @@ func (h *Handler) AddMock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if rb.Body == "" {
-		response.JSONError(w, http.StatusBadRequest, "body is empty ")
-		return
-	}
-
 	if rb.Method == "" {
 		response.JSONError(w, http.StatusBadRequest, "method is empty ")
 		return
@@ -54,13 +49,12 @@ func (h *Handler) AddMock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if rb.Status == 0 {
+	if rb.Status == "" {
 		response.JSONError(w, http.StatusBadRequest, "status is empty ")
 		return
 	}
 
 	url := strings.Trim(rb.Url, "/")
-	rb.Url = url
 	rb.Id = utils.RandomString(10)
 	_, ok := h.ConfigMap[url]
 

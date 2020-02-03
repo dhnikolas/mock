@@ -33,11 +33,6 @@ func (h *Handler) UpdateMock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if rb.Body == "" {
-		response.JSONError(w, http.StatusBadRequest, "body is empty ")
-		return
-	}
-
 	if rb.Method == "" {
 		response.JSONError(w, http.StatusBadRequest, "method is empty ")
 		return

@@ -4,6 +4,7 @@ import (
 	"log"
 	"mock/internal/handlers"
 	"mock/pkg/jsonconfig"
+	"mock/pkg/middleware"
 	"net/http"
 	"syscall"
 
@@ -15,16 +16,20 @@ func Init(cm map[string][]*jsonconfig.Mock) {
 
 	h := &handlers.Handler{ConfigMap: cm}
 
+	r.Use(middleware.Cors)
+
 	r.Get("/v1/mock/", h.ListMock)
 	r.Post("/v1/mock/", h.AddMock)
 	r.Patch("/v1/mock/", h.UpdateMock)
 	r.Delete("/v1/mock/", h.DeleteMock)
 
+	//Cors policy avoid
+	r.Options("/*", h.Options)
+
 	r.Get("/*", h.Index)
 	r.Post("/*", h.Index)
 	r.Patch("/*", h.Index)
 	r.Put("/*", h.Index)
-	r.Options("/*", h.Index)
 	r.Trace("/*", h.Index)
 	r.Head("/*", h.Index)
 	r.Delete("/*", h.Index)

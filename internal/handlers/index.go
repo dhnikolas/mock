@@ -3,6 +3,7 @@ package handlers
 import (
 	"mock/pkg/jsonconfig"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -35,11 +36,11 @@ func (h *Handler) mockResponse(w http.ResponseWriter, m *jsonconfig.Mock) {
 	} else {
 		w.Header().Set("Content-Type", m.ContentType)
 	}
-
-	if m.Status == 0 {
+	statusInt, errStatus := strconv.Atoi(m.Status)
+	if m.Status == "" || errStatus != nil{
 		w.WriteHeader(http.StatusOK)
 	} else {
-		w.WriteHeader(m.Status)
+		w.WriteHeader(statusInt)
 	}
 
 	w.Write([]byte(m.Body))

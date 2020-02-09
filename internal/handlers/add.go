@@ -55,7 +55,10 @@ func (h *Handler) AddMock(w http.ResponseWriter, r *http.Request) {
 	}
 
 	url := strings.Trim(rb.Url, "/")
-	rb.Id = utils.RandomString(10)
+	if len(rb.Id) < 1 {
+		rb.Id = utils.RandomString(10)
+	}
+
 	_, ok := h.ConfigMap[url]
 
 	if ok {

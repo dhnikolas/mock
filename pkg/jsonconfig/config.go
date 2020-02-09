@@ -14,8 +14,9 @@ type Mock struct {
 	Url         string          `json:"mainUrl"`
 	Method      string          `json:"method"`
 	Params      []*RequestParam `json:"params"`
-	Status      string             `json:"status"`
+	Status      string          `json:"status"`
 	ContentType string          `json:"contentType"`
+	Headers		[]*Header		`json:"headers"`
 	Body        string          `json:"body"`
 }
 
@@ -24,6 +25,11 @@ type Mocks []*Mock
 type RequestParam struct {
 	Name   string `json:"name"`
 	Regexp string `json:"regexp"`
+}
+
+type Header struct {
+	Name  string `json:"name"`
+	Value string `json:"value"`
 }
 
 func GetConfigMap() (map[string][]*Mock, error) {
@@ -56,7 +62,7 @@ func RemoveFromConfig(id string) (Mocks, bool, error) {
 		return nil, false, err
 	}
 	for i, m := range mocks {
-		if m.Id == id  {
+		if m.Id == id {
 			mocks = append(mocks[:i], mocks[i+1:]...)
 			isDeleted = true
 		}
@@ -77,7 +83,7 @@ func UpdateConfig(mock *Mock) (Mocks, bool, error) {
 		return nil, false, err
 	}
 	for i, m := range mocks {
-		if m.Id == mock.Id  {
+		if m.Id == mock.Id {
 			mocks[i] = mock
 			isUpdated = true
 		}

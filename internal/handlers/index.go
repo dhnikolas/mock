@@ -31,9 +31,12 @@ func (h *Handler) Index(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) mockResponse(w http.ResponseWriter, m *jsonconfig.Mock) {
-	if len(m.ContentType) < 1 {
-		w.Header().Set("Content-Type", "application/json")
-	} else {
+	if len(m.Headers) > 0 {
+		for _, h := range m.Headers {
+			w.Header().Set(h.Name, h.Value)
+		}
+	}
+	if len(m.ContentType) > 0 {
 		w.Header().Set("Content-Type", m.ContentType)
 	}
 	statusInt, errStatus := strconv.Atoi(m.Status)

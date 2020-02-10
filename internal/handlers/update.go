@@ -6,6 +6,7 @@ import (
 	"mock/pkg/jsonconfig"
 	"mock/pkg/response"
 	"net/http"
+	neturl "net/url"
 )
 
 func (h *Handler) UpdateMock(w http.ResponseWriter, r *http.Request) {
@@ -30,6 +31,12 @@ func (h *Handler) UpdateMock(w http.ResponseWriter, r *http.Request) {
 
 	if rb.Url == "" {
 		response.JSONError(w, http.StatusBadRequest, "url is empty ")
+		return
+	}
+
+	_, err = neturl.ParseRequestURI(rb.Url)
+	if err != nil {
+		response.JSONError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 

@@ -7,6 +7,7 @@ import (
 	"mock/pkg/response"
 	"mock/third_party/utils"
 	"net/http"
+	neturl "net/url"
 	"strings"
 )
 
@@ -27,6 +28,12 @@ func (h *Handler) AddMock(w http.ResponseWriter, r *http.Request) {
 
 	if rb.Url == "" {
 		response.JSONError(w, http.StatusBadRequest, "url is empty ")
+		return
+	}
+
+	_, err = neturl.ParseRequestURI(rb.Url)
+	if err != nil {
+		response.JSONError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 

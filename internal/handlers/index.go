@@ -1,10 +1,14 @@
 package handlers
 
 import (
-	"mock/pkg/jsonconfig"
+	"fmt"
+	"log"
 	"net/http"
+	"net/http/httputil"
 	"strconv"
 	"strings"
+	
+	"mock/pkg/jsonconfig"
 )
 
 type Handler struct {
@@ -12,6 +16,12 @@ type Handler struct {
 }
 
 func (h *Handler) Index(w http.ResponseWriter, r *http.Request) {
+	reqDump, err := httputil.DumpRequestOut(r, true)
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+	fmt.Printf("REQUEST:\n%s", string(reqDump))
 	url := strings.Trim(r.URL.Path, "/")
 	m, ok := h.ConfigMap[url]
 	if ok {
@@ -24,7 +34,7 @@ func (h *Handler) Index(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
-
+	
 	w.WriteHeader(http.StatusNotFound)
 	w.Write([]byte("page not found"))
 	return
@@ -40,11 +50,11 @@ func (h *Handler) mockResponse(w http.ResponseWriter, m *jsonconfig.Mock) {
 		w.Header().Set("Content-Type", m.ContentType)
 	}
 	statusInt, errStatus := strconv.Atoi(m.Status)
-	if m.Status == "" || errStatus != nil{
+	if m.Status == "" || errStatus != nil {
 		w.WriteHeader(http.StatusOK)
 	} else {
 		w.WriteHeader(statusInt)
 	}
-
+	
 	w.Write([]byte(m.Body))
 }

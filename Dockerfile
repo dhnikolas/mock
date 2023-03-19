@@ -8,7 +8,7 @@ RUN git clone https://github.com/dhnikolas/jsmock.git . \
 FROM golang:1.12 as build
 WORKDIR /go/mock/
 RUN git clone https://github.com/dhnikolas/mock.git . \
-    && git checkout tags/v1.3 \
+    && git checkout tags/v1.4 \
     && go mod vendor && GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o mockservice cmd/app/main.go
 
 FROM alpine:latest

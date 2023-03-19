@@ -2,11 +2,11 @@ package handlers
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"net/http/httputil"
 	"strconv"
 	"strings"
+	"time"
 	
 	"mock/pkg/jsonconfig"
 )
@@ -16,12 +16,7 @@ type Handler struct {
 }
 
 func (h *Handler) Index(w http.ResponseWriter, r *http.Request) {
-	reqDump, err := httputil.DumpRequestOut(r, true)
-	if err != nil {
-		log.Fatal(err)
-	}
-	
-	fmt.Printf("REQUEST:\n%s", string(reqDump))
+	h.dumpRequest(r)
 	url := strings.Trim(r.URL.Path, "/")
 	m, ok := h.ConfigMap[url]
 	if ok {
@@ -57,4 +52,13 @@ func (h *Handler) mockResponse(w http.ResponseWriter, m *jsonconfig.Mock) {
 	}
 	
 	w.Write([]byte(m.Body))
+}
+
+func (h *Handler) dumpRequest(r *http.Request) {
+	reqDump, err := httputil.DumpRequest(r, true)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	currentTime := time.Now().Format(time.RFC3339Nano)
+	fmt.Printf("Request %s:\n%s\n\n", currentTime, string(reqDump))
 }

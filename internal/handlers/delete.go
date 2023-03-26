@@ -2,9 +2,11 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	
+	"github.com/go-chi/chi"
 	"mock/internal/dto"
 	"mock/pkg/response"
 )
@@ -41,5 +43,45 @@ func (h *Handler) DeleteMock(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.JSON(w, http.StatusOK, "Mock successfully deleted")
+	return
+}
+
+func (h *Handler) DeleteLogRequests(w http.ResponseWriter, r *http.Request) {
+	mockId := chi.URLParam(r, "mockId")
+	if len(mockId) < 1 {
+		response.WriteBody(w, http.StatusNotFound, []byte{})
+		return
+	}
+	
+	count, err := h.LogRequest.DeleteByMockId(mockId)
+	if err != nil {
+		response.JSONError(w, http.StatusInternalServerError, "Delete log requests error:  " + err.Error())
+		return
+	}
+	
+	response.JSON(w, http.StatusOK, "Log requests successfully deleted: " + fmt.Sprint(count))
+	return
+}
+
+func (h *Handler) DeleteLog(w http.ResponseWriter, r *http.Request) {
+	mockId := chi.URLParam(r, "mockId")
+	if len(mockId) < 1 {
+		response.WriteBody(w, http.StatusNotFound, []byte{})
+		return
+	}
+	
+	logId := chi.URLParam(r, "logId")
+	if len(logId) < 1 {
+		response.WriteBody(w, http.StatusNotFound, []byte{})
+		return
+	}
+	
+	_, err := h.LogRequest.DeleteLog(mockId, logId)
+	if err != nil {
+		response.JSONError(w, http.StatusInternalServerError, "Delete log requests error:  " + err.Error())
+		return
+	}
+	
+	response.JSON(w, http.StatusOK, "Log requests successfully deleted")
 	return
 }

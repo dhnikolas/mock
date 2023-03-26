@@ -47,7 +47,7 @@ func (h *Handler) Index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	
-	fmt.Println(dump)
+	prepareLog(dump)
 	w.WriteHeader(http.StatusNotFound)
 	w.Write([]byte("page not found"))
 	return
@@ -77,6 +77,10 @@ func (h *Handler) dumpRequest(r *http.Request) string {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
+	return string(reqDump)
+}
+
+func prepareLog (log string) string {
 	currentTime := time.Now().Format(time.RFC3339Nano)
-	return fmt.Sprintf("Request %s:\n%s\n\n", currentTime, string(reqDump))
+	return fmt.Sprintf("Request %s:\n%s\n\n", currentTime, string(log))
 }

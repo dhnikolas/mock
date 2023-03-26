@@ -22,3 +22,13 @@ func (r *Repository) GetByMockId (mockId string) (*dto.LogRequests, error) {
 	result := r.db.Order("created_at desc").Find(logs, "mock_id = ?", mockId)
 	return logs, result.Error
 }
+
+func (r *Repository) DeleteByMockId (mockId string) (int64, error) {
+	result := r.db.Where("mock_id = ?", mockId).Delete(&dto.LogRequest{})
+	return result.RowsAffected , result.Error
+}
+
+func (r *Repository) DeleteLog (mockId, logId string) (bool, error) {
+	result := r.db.Where("mock_id = ? AND id = ?", mockId, logId).Delete(&dto.LogRequest{})
+	return result.RowsAffected > 0, result.Error
+}

@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	db, err := gormdb.DB("mock.db")
+	db, err := gormdb.DB("./mock.db")
 	if err != nil {
 		log.Fatal(err)
 	}

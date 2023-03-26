@@ -24,6 +24,8 @@ func Init(m *mock.Repository, l *logrequest.Repository) {
 	r.Post("/v1/mock/", h.AddMock)
 	r.Patch("/v1/mock/", h.UpdateMock)
 	r.Delete("/v1/mock/", h.DeleteMock)
+	r.Delete("/v1/mock/{mockId}/mock-requests", h.DeleteLogRequests)
+	r.Delete("/v1/mock/{mockId}/mock-requests/{logId}", h.DeleteLog)
 
 	//UI
 	r.Get("/ui/", h.UserInterface)

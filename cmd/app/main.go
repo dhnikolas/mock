@@ -1,15 +1,26 @@
 package main
 
 import (
+	"log"
+	
+	"mock/internal/dto"
+	"mock/internal/repository/logrequest"
+	"mock/internal/repository/mock"
 	"mock/internal/routes"
-	"mock/pkg/jsonconfig"
+	"mock/pkg/gormdb"
 )
 
 func main() {
-	cm, err := jsonconfig.GetConfigMap()
+	db, err := gormdb.DB("mock.db")
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
-
-	routes.Init(cm)
+	err = db.AutoMigrate(&dto.Mock{}, &dto.LogRequest{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+	repoMock := mock.NewRepository(db)
+	repoLogRequest := logrequest.NewRepository(db)
+	routes.Init(repoMock, repoLogRequest)
 }

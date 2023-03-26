@@ -2,22 +2,25 @@ package routes
 
 import (
 	"log"
-	"mock/internal/handlers"
-	"mock/pkg/jsonconfig"
-	"mock/pkg/middleware"
 	"net/http"
-	"syscall"
-
+	"os"
+	
+	"mock/internal/handlers"
+	"mock/internal/repository/logrequest"
+	"mock/internal/repository/mock"
+	"mock/pkg/middleware"
+	
 	"github.com/go-chi/chi"
 )
 
-func Init(cm map[string][]*jsonconfig.Mock) {
+func Init(m *mock.Repository, l *logrequest.Repository) {
 	r := chi.NewRouter()
-	h := &handlers.Handler{ConfigMap: cm}
+	h := &handlers.Handler{Mock: m, LogRequest: l}
 	r.Use(middleware.Cors)
 
 	//API
 	r.Get("/v1/mock/", h.ListMock)
+	r.Get("/v1/mock/{mockId}/mock-requests", h.ListLogRequests)
 	r.Post("/v1/mock/", h.AddMock)
 	r.Patch("/v1/mock/", h.UpdateMock)
 	r.Delete("/v1/mock/", h.DeleteMock)
@@ -37,7 +40,8 @@ func Init(cm map[string][]*jsonconfig.Mock) {
 	r.Head("/*", h.Index)
 	r.Delete("/*", h.Index)
 
-	port, found := syscall.Getenv("CURRENT_PORT")
+	port := os.Getenv("CURRENT_PORT")
+	found := len(port) > 0
 	if !found {
 		port = "8111"
 	}

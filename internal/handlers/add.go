@@ -3,17 +3,19 @@ package handlers
 import (
 	"encoding/json"
 	"io/ioutil"
-	"mock/pkg/jsonconfig"
-	"mock/pkg/response"
-	"mock/third_party/utils"
 	"net/http"
 	neturl "net/url"
 	"strings"
+	
+	"github.com/google/uuid"
+	"mock/internal/dto"
+	"mock/pkg/response"
+	"mock/third_party/utils"
 )
 
 func (h *Handler) AddMock(w http.ResponseWriter, r *http.Request) {
 
-	rb := &jsonconfig.Mock{}
+	rb := &dto.Mock{}
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		response.JSONError(w, http.StatusBadRequest, err.Error())
@@ -61,33 +63,27 @@ func (h *Handler) AddMock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	url := strings.Trim(rb.Url, "/")
+	url := strings.TrimRight(rb.Url, "/")
+	rb.Url = url
 	if len(rb.Id) < 1 {
-		rb.Id = utils.RandomString(10)
+		id := uuid.New()
+		rb.Id = id.String()
 	}
-
-	_, ok := h.ConfigMap[url]
-
+	
+	_, ok, _ := h.Mock.GetByUrlAndMethod(url, rb.Method)
 	if ok {
-		for _, cm := range h.ConfigMap[url] {
-			if cm.Method == rb.Method {
-				response.JSONError(w, http.StatusBadRequest, "Mock already exist")
-				return
-			}
-		}
-		h.ConfigMap[url] = append(h.ConfigMap[url], rb)
-	} else {
-		h.ConfigMap[url] = []*jsonconfig.Mock{rb}
-	}
-
-	err = jsonconfig.AddToConfig(rb)
-	if err != nil {
-		response.JSONError(w, http.StatusBadRequest, err.Error())
+		response.JSONError(w, http.StatusBadRequest, "Mock already exist")
 		return
 	}
+	err = h.Mock.Add(rb)
+	if err != nil {
+		response.JSONError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	
 	jsonBody, err := json.Marshal(rb)
 	if err != nil {
-		response.JSONError(w, http.StatusBadRequest, err.Error())
+		response.JSONError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 

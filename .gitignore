@@ -5,3 +5,4 @@ logs/
 rest-client.env.json
 cmd/app/mock.json
 mock.json
+mock.db

@@ -3,15 +3,16 @@ package handlers
 import (
 	"encoding/json"
 	"io/ioutil"
-	"mock/pkg/jsonconfig"
-	"mock/pkg/response"
 	"net/http"
 	neturl "net/url"
+	
+	"mock/internal/dto"
+	"mock/pkg/response"
 )
 
 func (h *Handler) UpdateMock(w http.ResponseWriter, r *http.Request) {
 
-	rb := &jsonconfig.Mock{}
+	rb := &dto.Mock{}
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		response.JSONError(w, http.StatusBadRequest, err.Error())
@@ -44,8 +45,8 @@ func (h *Handler) UpdateMock(w http.ResponseWriter, r *http.Request) {
 		response.JSONError(w, http.StatusBadRequest, "method is empty ")
 		return
 	}
-
-	updatedMocks, isUpdated, err := jsonconfig.UpdateConfig(rb)
+	
+	isUpdated, err := h.Mock.Update(rb)
 	if err != nil {
 		response.JSONError(w, http.StatusBadRequest, err.Error())
 		return
@@ -55,8 +56,6 @@ func (h *Handler) UpdateMock(w http.ResponseWriter, r *http.Request) {
 		response.JSONError(w, http.StatusBadRequest, "nothing to update")
 		return
 	}
-
-	h.ConfigMap = jsonconfig.ConfigMap(updatedMocks)
 
 	jsonBody, err := json.Marshal(rb)
 	if err != nil {

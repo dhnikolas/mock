@@ -1,8 +1,9 @@
 package handlers
 
 import (
-	"mock/pkg/response"
 	"net/http"
+	
+	"github.com/dhnikolas/mock/pkg/response"
 )
 
 func (h *Handler) Options(w http.ResponseWriter, r *http.Request) {

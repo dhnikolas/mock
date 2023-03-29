@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"os"
 	
-	"mock/internal/handlers"
-	"mock/internal/repository/logrequest"
-	"mock/internal/repository/mock"
-	"mock/pkg/middleware"
+	"github.com/dhnikolas/mock/internal/handlers"
+	"github.com/dhnikolas/mock/internal/repository/logrequest"
+	"github.com/dhnikolas/mock/internal/repository/mock"
+	"github.com/dhnikolas/mock/pkg/middleware"
 	
 	"github.com/go-chi/chi"
 )

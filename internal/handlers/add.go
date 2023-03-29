@@ -7,10 +7,10 @@ import (
 	neturl "net/url"
 	"strings"
 	
+	"github.com/dhnikolas/mock/internal/dto"
+	"github.com/dhnikolas/mock/pkg/response"
+	"github.com/dhnikolas/mock/third_party/utils"
 	"github.com/google/uuid"
-	"mock/internal/dto"
-	"mock/pkg/response"
-	"mock/third_party/utils"
 )
 
 func (h *Handler) AddMock(w http.ResponseWriter, r *http.Request) {

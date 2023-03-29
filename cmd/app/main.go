@@ -3,11 +3,11 @@ package main
 import (
 	"log"
 	
-	"mock/internal/dto"
-	"mock/internal/repository/logrequest"
-	"mock/internal/repository/mock"
-	"mock/internal/routes"
-	"mock/pkg/gormdb"
+	"github.com/dhnikolas/mock/internal/dto"
+	"github.com/dhnikolas/mock/internal/repository/logrequest"
+	"github.com/dhnikolas/mock/internal/repository/mock"
+	"github.com/dhnikolas/mock/internal/routes"
+	"github.com/dhnikolas/mock/pkg/gormdb"
 )
 
 func main() {

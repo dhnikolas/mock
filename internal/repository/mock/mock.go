@@ -1,8 +1,8 @@
 package mock
 
 import (
+	"github.com/dhnikolas/mock/internal/dto"
 	"gorm.io/gorm"
-	"mock/internal/dto"
 )
 
 type Repository struct {

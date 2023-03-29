@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 	
+	"github.com/dhnikolas/mock/pkg/response"
 	"github.com/go-chi/chi"
-	"mock/pkg/response"
 )
 
 func (h *Handler) ListMock(w http.ResponseWriter, r *http.Request) {

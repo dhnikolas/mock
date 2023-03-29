@@ -1,4 +1,4 @@
-module mock
+module github.com/dhnikolas/mock
 
 go 1.12
 

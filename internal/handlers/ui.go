@@ -2,8 +2,9 @@ package handlers
 
 import (
 	"html/template"
-	"mock/public"
 	"net/http"
+	
+	"github.com/dhnikolas/mock/public"
 )
 
 func (h *Handler) UserInterface(w http.ResponseWriter, r *http.Request) {

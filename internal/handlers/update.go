@@ -6,8 +6,8 @@ import (
 	"net/http"
 	neturl "net/url"
 	
-	"mock/internal/dto"
-	"mock/pkg/response"
+	"github.com/dhnikolas/mock/internal/dto"
+	"github.com/dhnikolas/mock/pkg/response"
 )
 
 func (h *Handler) UpdateMock(w http.ResponseWriter, r *http.Request) {

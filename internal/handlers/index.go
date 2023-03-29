@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 	
-	"mock/internal/dto"
-	"mock/internal/repository/logrequest"
-	"mock/internal/repository/mock"
-	"mock/pkg/response"
+	"github.com/dhnikolas/mock/internal/dto"
+	"github.com/dhnikolas/mock/internal/repository/logrequest"
+	"github.com/dhnikolas/mock/internal/repository/mock"
+	"github.com/dhnikolas/mock/pkg/response"
 )
 
 type Handler struct {

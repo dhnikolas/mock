@@ -1,10 +1,11 @@
 package handlers
 
 import (
-	"mock/public"
 	"net/http"
 	"net/url"
 	"strings"
+	
+	"github.com/dhnikolas/mock/public"
 )
 
 func (h *Handler) Static(w http.ResponseWriter, r *http.Request) {

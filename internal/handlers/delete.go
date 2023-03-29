@@ -6,9 +6,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	
+	"github.com/dhnikolas/mock/internal/dto"
+	"github.com/dhnikolas/mock/pkg/response"
 	"github.com/go-chi/chi"
-	"mock/internal/dto"
-	"mock/pkg/response"
 )
 
 func (h *Handler) DeleteMock(w http.ResponseWriter, r *http.Request) {

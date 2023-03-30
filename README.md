@@ -20,7 +20,7 @@ Configure endpoints:
 Make request and get response:
 
     $ curl http:/localhost:8111/api/v1/pam
-    {"project_id","s98fsufhs9fusnf9si"}
+    {"project_id": "s98fsufhs9fusnf9si"}
 
 
 Show request logs:

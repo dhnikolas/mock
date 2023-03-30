@@ -5,7 +5,7 @@ The self-hosted HTTP mock service typically exposes a set of endpoints that you 
 
 Run with docker:
 
-    docker run -v `pwd`:/var/mock/ -p 8111:8111 dhnikolas/mock:v2.2
+    docker run -v /var/mock:/var/mock/ -p 8111:8111 dhnikolas/mock:v2.2
 
 ## Usage
 

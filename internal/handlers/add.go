@@ -33,7 +33,7 @@ func (h *Handler) AddMock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = neturl.ParseRequestURI(rb.Url)
+	parsedUrl, err := neturl.ParseRequestURI(rb.Url)
 	if err != nil {
 		response.JSONError(w, http.StatusBadRequest, err.Error())
 		return
@@ -63,14 +63,14 @@ func (h *Handler) AddMock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	url := strings.TrimRight(rb.Url, "/")
-	rb.Url = url
+	currentUrl := prepareUrl(parsedUrl)
+	rb.Url = currentUrl
 	if len(rb.Id) < 1 {
 		id := uuid.New()
 		rb.Id = id.String()
 	}
 	
-	_, ok, _ := h.Mock.GetByUrlAndMethod(url, rb.Method)
+	_, ok, _ := h.Mock.GetByUrlAndMethod(currentUrl, rb.Method)
 	if ok {
 		response.JSONError(w, http.StatusBadRequest, "Mock already exist")
 		return

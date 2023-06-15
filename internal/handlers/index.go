@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httputil"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -21,8 +22,8 @@ type Handler struct {
 
 func (h *Handler) Index(w http.ResponseWriter, r *http.Request) {
 	dump := h.dumpRequest(r)
-	url := strings.TrimRight(r.URL.Path, "/")
-	mockResult, err := h.Mock.GetByUrl(url)
+	currentUrl := prepareUrl(r.URL)
+	mockResult, err := h.Mock.GetByUrl(currentUrl)
 	if err != nil {
 		response.JSONError(w, http.StatusInternalServerError, err.Error())
 		return
@@ -83,4 +84,13 @@ func (h *Handler) dumpRequest(r *http.Request) string {
 func prepareLog (log string) string {
 	currentTime := time.Now().Format(time.RFC3339Nano)
 	return fmt.Sprintf("Request %s:\n%s\n\n", currentTime, string(log))
+}
+
+func prepareUrl (u *url.URL) string {
+	currentUrl := strings.TrimRight(u.Path, "/")
+	if u.RawQuery != "" {
+		currentUrl = currentUrl + "?" + u.RawQuery
+	}
+	
+	return currentUrl
 }

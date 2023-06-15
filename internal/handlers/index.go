@@ -48,7 +48,7 @@ func (h *Handler) Index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	
-	prepareLog(dump)
+	fmt.Println(prepareLog(dump))
 	w.WriteHeader(http.StatusNotFound)
 	w.Write([]byte("page not found"))
 	return
